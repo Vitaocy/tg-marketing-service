@@ -27,6 +27,9 @@ class DashboardService:
             collections=collections
         )
 
+    # ------------------------
+    # QuerySet
+    # ------------------------
 
     def _get_channels_queryset(self):
         latest_stats = ChannelStats.objects.filter(
