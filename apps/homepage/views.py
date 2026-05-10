@@ -19,10 +19,7 @@ class DashboardView(View):
             request,
             'Dashboard',
             props={
-                "stats": dto.stats.__dict__,
-                "channels": [c.__dict__ for c in dto.channels],
-                "ai_insights": [i.__dict__ for i in dto.ai_insights],
-                "collections": [c.__dict__ for c in dto.collections],
+                **dto.model_dump(mode="json"),
                 "csrfToken": get_token(request),
             }
         )
