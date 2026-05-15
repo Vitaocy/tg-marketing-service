@@ -1,7 +1,7 @@
 from django.db.models import OuterRef, Subquery, Avg
 from apps.parser.models import TelegramChannel, ChannelStats, AIInsight
 from apps.group_channels.models import Group
-from dto.dashboard_dto import (
+from apps.homepage.dto.dashboard_dto import (
     DashboardDTO, StatsDTO, ChannelDTO, InsightDTO, CollectionDTO
 )
 
