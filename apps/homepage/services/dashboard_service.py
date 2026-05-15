@@ -19,12 +19,14 @@ class DashboardService:
         channels = self._build_channels(channels_qs)
         insights = self._build_insights(channels_qs)
         collections = self._build_collections()
+        quick_actions = ["Добавить канал", "Экспорт данных", "Настройки"]
   
         return DashboardDTO(
             stats=stats,
             channels=channels,
             ai_insights=insights,
-            collections=collections
+            collections=collections,
+            quick_actions=quick_actions
         )
 
     # ------------------------
@@ -162,7 +164,7 @@ class DashboardService:
                 channels_count=g.channels.count(),
                 slug=g.slug,
                 description=g.description,
-                is_auto=False  # лучше сделать явным полем
+                is_auto=False
             )
             for g in groups
         ]

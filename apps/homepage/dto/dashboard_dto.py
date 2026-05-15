@@ -37,3 +37,4 @@ class DashboardDTO(BaseModel):
     channels: List[ChannelDTO]
     ai_insights: List[InsightDTO]
     collections: List[CollectionDTO]
+    quick_actions: List[str]
