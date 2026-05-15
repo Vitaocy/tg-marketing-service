@@ -25,7 +25,7 @@ class IndexView(View):
         
         # Если пользователь авторизован - редирект на дашборд
         if request.user.is_authenticated:
-            return redirect('/dashboard/')
+            return redirect('homepage:dashboard')
         
         # Получаем все активные компоненты, сортируем по порядку
         components = (
