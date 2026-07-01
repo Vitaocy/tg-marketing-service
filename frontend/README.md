@@ -27,8 +27,8 @@ SPA-часть проекта: React + TypeScript, интегрируется с
 ## Запуск
 
 ```sh
-git clone https://github.com/Hexlet/hexlet-price-tracker.git
-cd hexlet-price-tracker/frontend
+git clone https://github.com/hexlet-volunteers/tg-marketing-service.git
+cd tg-marketing-service/frontend
 npm i
 npm run dev
 ```
