@@ -2,6 +2,7 @@ import asyncio
 import logging
 import random
 import time
+from typing import Any
 
 from asgiref.sync import sync_to_async
 from celery import shared_task
@@ -18,7 +19,7 @@ log = logging.getLogger(__name__)
 
 
 @shared_task
-def parse_channel(channel_id):
+def parse_channel(channel_id: int) -> None:
     """Celery task for channel parse"""
     try:
         channel = TelegramChannel.objects.get(channel_id=channel_id)
@@ -30,7 +31,7 @@ def parse_channel(channel_id):
                   f'{channel_id} - {e}')
         return
 
-    async def run_parser(channel_obj):
+    async def run_parser(channel_obj: TelegramChannel) -> None:
         """Secondary func for async parsing"""
         api_id, api_hash, session_string = get_telegram_credentials(
             require_session=True
@@ -61,7 +62,7 @@ def parse_channel(channel_id):
         log.error(f"Connection failed for {channel_id}: {e}")
 
 
-def save_channel_data(channel, data):
+def save_channel_data(channel: TelegramChannel, data: dict[str, Any]) -> None:
     """Save channels data"""
     channel.title = data["title"]
     channel.description = data.get("description", "Нет описания")
@@ -74,7 +75,7 @@ def save_channel_data(channel, data):
     log.info(f"Data from channel {channel.title} successfully saved")
 
 
-def save_channel_stats(channel, data):
+def save_channel_stats(channel: TelegramChannel, data: dict[str, Any]) -> None:
     """Save channel stats"""
     last_stats = (
         ChannelStats.objects.filter(channel=channel).order_by("-parsed_at").first()
@@ -101,7 +102,7 @@ def save_channel_stats(channel, data):
 
 
 @shared_task
-def parse_all_channels():
+def parse_all_channels() -> None:
     """Task for Celery: parse all channels from database"""
     channels = TelegramChannel.objects.all()
     if not channels:

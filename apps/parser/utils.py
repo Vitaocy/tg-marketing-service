@@ -1,8 +1,24 @@
+from typing import Literal, overload
+
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
 
-def get_telegram_credentials(require_session: bool = False):
+@overload
+def get_telegram_credentials(
+    require_session: Literal[True],
+) -> tuple[int, str, str]: ...
+
+
+@overload
+def get_telegram_credentials(
+    require_session: bool = False,
+) -> tuple[int, str, str | None]: ...
+
+
+def get_telegram_credentials(
+    require_session: bool = False,
+) -> tuple[int, str, str | None]:
     """Return Telegram API credentials from Django settings.
 
     Validates that TELEGRAM_API_ID and TELEGRAM_API_HASH are configured
@@ -13,7 +29,7 @@ def get_telegram_credentials(require_session: bool = False):
         require_session: If True, also require TELEGRAM_SESSION_STRING.
 
     Returns:
-        tuple: (api_id: int, api_hash: str, session_string: str)
+        tuple: (api_id: int, api_hash: str, session_string: str | None)
     """
     api_id = settings.TELEGRAM_API_ID
     api_hash = settings.TELEGRAM_API_HASH

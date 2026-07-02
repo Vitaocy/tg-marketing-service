@@ -19,7 +19,7 @@ TELEGRAM_ENV_VARS = [
 ]
 
 
-def _clean_env():
+def _clean_env() -> dict[str, str]:
     """Return a copy of the current env without Telegram variables."""
     return {
         key: value
@@ -28,7 +28,7 @@ def _clean_env():
     }
 
 
-def test_settings_imports_without_telegram_env():
+def test_settings_imports_without_telegram_env() -> None:
     """settings.py must not raise on import when Telegram keys are absent."""
     project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     code = "import config.settings"
@@ -50,7 +50,7 @@ def test_settings_imports_without_telegram_env():
     TELEGRAM_API_HASH="abc",
     TELEGRAM_SESSION_STRING="session",
 )
-def test_get_telegram_credentials_returns_valid_values():
+def test_get_telegram_credentials_returns_valid_values() -> None:
     api_id, api_hash, session = get_telegram_credentials()
     assert api_id == 12345
     assert api_hash == "abc"
@@ -62,7 +62,7 @@ def test_get_telegram_credentials_returns_valid_values():
     TELEGRAM_API_HASH="abc",
     TELEGRAM_SESSION_STRING="session",
 )
-def test_get_telegram_credentials_raises_without_api_id():
+def test_get_telegram_credentials_raises_without_api_id() -> None:
     with pytest.raises(ImproperlyConfigured):
         get_telegram_credentials()
 
@@ -72,7 +72,7 @@ def test_get_telegram_credentials_raises_without_api_id():
     TELEGRAM_API_HASH="",
     TELEGRAM_SESSION_STRING="session",
 )
-def test_get_telegram_credentials_raises_without_api_hash():
+def test_get_telegram_credentials_raises_without_api_hash() -> None:
     with pytest.raises(ImproperlyConfigured):
         get_telegram_credentials()
 
@@ -82,7 +82,7 @@ def test_get_telegram_credentials_raises_without_api_hash():
     TELEGRAM_API_HASH="abc",
     TELEGRAM_SESSION_STRING="session",
 )
-def test_get_telegram_credentials_raises_on_invalid_api_id():
+def test_get_telegram_credentials_raises_on_invalid_api_id() -> None:
     with pytest.raises(ImproperlyConfigured):
         get_telegram_credentials()
 
@@ -92,7 +92,7 @@ def test_get_telegram_credentials_raises_on_invalid_api_id():
     TELEGRAM_API_HASH="abc",
     TELEGRAM_SESSION_STRING="",
 )
-def test_get_telegram_credentials_raises_without_session_when_required():
+def test_credentials_raises_without_session_when_required() -> None:
     with pytest.raises(ImproperlyConfigured):
         get_telegram_credentials(require_session=True)
 
@@ -102,7 +102,7 @@ def test_get_telegram_credentials_raises_without_session_when_required():
     TELEGRAM_API_HASH="abc",
     TELEGRAM_SESSION_STRING="",
 )
-def test_parser_view_get_telegram_client_raises_without_session():
+def test_parser_view_get_telegram_client_raises_without_session() -> None:
     view = ParserView()
     with pytest.raises(ImproperlyConfigured):
         view.get_telegram_client()
@@ -114,7 +114,7 @@ def test_parser_view_get_telegram_client_raises_without_session():
     TELEGRAM_API_HASH="",
     TELEGRAM_SESSION_STRING="",
 )
-def test_parse_channel_raises_without_telegram_credentials():
+def test_parse_channel_raises_without_telegram_credentials() -> None:
     channel = TelegramChannel.objects.create(
         channel_id=123456789,
         title="Test Channel",

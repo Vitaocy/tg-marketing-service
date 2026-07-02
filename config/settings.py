@@ -25,9 +25,9 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Telegram app settings
-TELEGRAM_API_ID = os.getenv('TELEGRAM_API_ID')
-TELEGRAM_API_HASH = os.getenv('TELEGRAM_API_HASH')
-TELEGRAM_SESSION_STRING = os.getenv('TELEGRAM_SESSION_STRING')
+TELEGRAM_API_ID: str | None = os.getenv('TELEGRAM_API_ID')
+TELEGRAM_API_HASH: str | None = os.getenv('TELEGRAM_API_HASH')
+TELEGRAM_SESSION_STRING: str | None = os.getenv('TELEGRAM_SESSION_STRING')
 
 # Celery settings
 CELERY_BROKER_URL = "redis://localhost:6379/0"  # Redis like messages brocker

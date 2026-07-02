@@ -1,7 +1,9 @@
 import logging
+from typing import Any
 
 from asgiref.sync import async_to_sync
 from django.contrib import messages
+from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import DetailView, FormView, ListView
@@ -23,7 +25,7 @@ class ParserView(UserAuthenticationCheckMixin, FormView):
     template_name = 'parser/parse_channel.html'
     success_url = reverse_lazy("parser:list")
 
-    def get_telegram_client(self):
+    def get_telegram_client(self) -> TelegramClient:
         """Get Telegram client for parser work"""
         api_id, api_hash, session_string = get_telegram_credentials(
             require_session=True
@@ -34,7 +36,9 @@ class ParserView(UserAuthenticationCheckMixin, FormView):
             api_hash,
         )
 
-    async def async_tg_parser(self, url, limit=10):
+    async def async_tg_parser(
+        self, url: str, limit: int = 10
+    ) -> dict[str, Any]:
         """Parser wrapper"""
         client = self.get_telegram_client()
         await client.connect()
@@ -43,7 +47,9 @@ class ParserView(UserAuthenticationCheckMixin, FormView):
         finally:
             await client.disconnect()
 
-    def save_channel(self, data, request=None):
+    def save_channel(
+        self, data: dict[str, Any]
+    ) -> tuple[TelegramChannel, bool]:
         """Create or update channel"""
         channel, created = TelegramChannel.objects.update_or_create(
             channel_id=data["channel_id"],
@@ -67,8 +73,10 @@ class ParserView(UserAuthenticationCheckMixin, FormView):
             log.info(f"Channel updated: {channel.title}")
 
         return channel, created
-            
-    def save_stats(self, channel, data):
+
+    def save_stats(
+        self, channel: TelegramChannel, data: dict[str, Any]
+    ) -> None:
         """Create stats record with growth calculation"""
         last_stats = (
             ChannelStats.objects.filter(channel=channel).order_by("-parsed_at").first()
@@ -98,7 +106,7 @@ class ParserView(UserAuthenticationCheckMixin, FormView):
             f"- participants: {current_count} growth: {daily_growth}"
         )
 
-    def form_valid(self, form):
+    def form_valid(self, form: ChannelParseForm) -> HttpResponse:
         """ Обработка формы """
         identifier = form.cleaned_data['channel_identifier']
         limit = form.cleaned_data['limit']
@@ -115,8 +123,8 @@ class ParserView(UserAuthenticationCheckMixin, FormView):
                                 'country': country,
                                 'category': category})
 
-            log.info(f'Парсинг завершен для канала;'
-                     f'- {parsed_data['title']} ({parsed_data['channel_id']}')
+            log.info(f'Парсинг завершен для канала: '
+                     f'{parsed_data['title']} ({parsed_data['channel_id']})')
 
             # Saving data
             channel, created = self.save_channel(parsed_data)
@@ -141,9 +149,14 @@ class ParserListView(ListView):
     model = TelegramChannel
     token = 'TEMP_TOKEN'
 
-    def get(self, request, *args, **kwargs):
+    def get(
+        self,
+        request: HttpRequest,
+        *args: Any,
+        **kwargs: Any,
+    ) -> HttpResponse:
         channels = self.get_queryset()
-    
+
         return inertia_render(
             request,
             'ChannelAnalytics',
