@@ -14,8 +14,6 @@ from pathlib import Path
 from .logging import LOGGING
 import os
 from celery.schedules import crontab
-
-from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 import dj_database_url
 
@@ -30,14 +28,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TELEGRAM_API_ID = os.getenv('TELEGRAM_API_ID')
 TELEGRAM_API_HASH = os.getenv('TELEGRAM_API_HASH')
 TELEGRAM_SESSION_STRING = os.getenv('TELEGRAM_SESSION_STRING')
-
-# Telegram settings check
-# SESSIONS_STRING is not necessary, because working with sole db can be too
-if not TELEGRAM_API_ID or not TELEGRAM_API_HASH:
-    raise ImproperlyConfigured(
-        "Нет конфигурации для Telegram API. "
-        "Установи TELEGRAM_API_ID, TELEGRAM_API_HASH"
-    )
 
 # Celery settings
 CELERY_BROKER_URL = "redis://localhost:6379/0"  # Redis like messages brocker

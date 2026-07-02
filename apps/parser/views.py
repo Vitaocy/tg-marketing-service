@@ -1,23 +1,18 @@
 import logging
 
 from asgiref.sync import async_to_sync
-from django.conf import settings
 from django.contrib import messages
-from django.core.exceptions import ImproperlyConfigured
-from django.core.exceptions import ObjectDoesNotExist
-
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import DetailView, FormView, ListView
+from inertia import render as inertia_render
 from telethon import TelegramClient
 from telethon.sessions import StringSession
 
 from apps.parser.forms import ChannelParseForm
 from apps.parser.models import ChannelStats, TelegramChannel
 from apps.parser.parser import tg_parser
-
-from inertia import render as inertia_render
-
+from apps.parser.utils import get_telegram_credentials
 from config.mixins import UserAuthenticationCheckMixin
 
 log = logging.getLogger(__name__)
@@ -30,17 +25,13 @@ class ParserView(UserAuthenticationCheckMixin, FormView):
 
     def get_telegram_client(self):
         """Get Telegram client for parser work"""
-        if not settings.TELEGRAM_SESSION_STRING:
-            raise ImproperlyConfigured(
-                'TELEGRAM_SESSION_STRING\
-                    (needed by Telethon to parse data from Telegram)\
-                        is not set. Please run\
-                            `uv run python3 manage.py set_sessions_string`'
-            )
+        api_id, api_hash, session_string = get_telegram_credentials(
+            require_session=True
+        )
         return TelegramClient(
-            StringSession(settings.TELEGRAM_SESSION_STRING),
-            settings.TELEGRAM_API_ID,
-            settings.TELEGRAM_API_HASH,
+            StringSession(session_string),
+            api_id,
+            api_hash,
         )
 
     async def async_tg_parser(self, url, limit=10):
@@ -51,7 +42,6 @@ class ParserView(UserAuthenticationCheckMixin, FormView):
             return await tg_parser(url, client, limit)
         finally:
             await client.disconnect()
-    
 
     def save_channel(self, data, request=None):
         """Create or update channel"""
@@ -159,7 +149,7 @@ class ParserListView(ListView):
             'ChannelAnalytics',
             props={
                 "channels": channels,
-                "csrfToken": self.token,   
+                "csrfToken": self.token,
             }
         )
 
