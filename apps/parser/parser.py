@@ -23,8 +23,10 @@ async def tg_parser(url: str, client: TelegramClient, limit: int = 10) -> dict:
 
     Parameters:
         url (str): URL of the Telegram channel in any valid format
-                   (e.g., `https://t.me/example`, `t.me/example`, `@example`, `example`)
-        client (TelegramClient): A Telegram client instance from the `telethon` library
+                   (e.g., `https://t.me/example`, `t.me/example`,
+                   `@example`, `example`)
+        client (TelegramClient): A Telegram client instance from the
+                                 `telethon` library
         limit (int): Number of messages to parse (default: 10)
 
     Returns:
@@ -45,16 +47,24 @@ async def tg_parser(url: str, client: TelegramClient, limit: int = 10) -> dict:
 
         data["title"] = channel.title  # Channel title
         data["channel_id"] = channel.id  # Channel id
-        data["username"] = channel.username if channel.username else '-'  # Channel username
+        data["username"] = (
+            channel.username if channel.username else '-'
+        )  # Channel username
         data["verified"] = channel.verified  # Is channel verified? (boolean)
         # Channel creation date
-        data["creation_date"] = channel.date.isoformat() if channel.date else None
+        data["creation_date"] = (
+            channel.date.isoformat() if channel.date else None
+        )
         # Fetches last channel posts
 
         last_messages = await client.get_messages(channel, limit=limit * 3)
         # Calculates average views of recent posts
         data["last_messages"] = [
-            {"post_id": post.id, "post_text": post.text, "post_views": post.views}
+            {
+                "post_id": post.id,
+                "post_text": post.text,
+                "post_views": post.views,
+            }
             for post in last_messages[:limit]
         ]
         total_views = 0

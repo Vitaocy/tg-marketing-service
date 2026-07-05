@@ -9,8 +9,9 @@ from guardian.utils import get_anonymous_user
 class CheckingUserRolesMixin:
     """
     Миксин для проверки статуса пользователя (анонимный / авторизованный)
-    (в виду запуска миделвары RoleMiddleware после ее теста и проработки можно 
-    со временем избавиться от избыточной проверки на ананимность, но только после долгого тестирования миделвары)
+    (в виду запуска миделвары RoleMiddleware после ее теста и
+    проработки можно со временем избавиться от избыточной проверки на
+    ананимность, но только после долгого тестирования миделвары)
     """
     def is_anonymous(self):
         # Получаем специальный анонимный экземпляр Guardian
@@ -19,7 +20,8 @@ class CheckingUserRolesMixin:
         # Пользователь из текущего запроса
         user = self.request.user
 
-        # Проверяем равенство текущего пользователя специальному анонимному экземпляру
+        # Проверяем равенство текущего пользователя специальному
+        # анонимному экземпляру
         # или, что пользователь не прошёл аутентификацию
         if user == anonymous_guardian_user or not user.is_authenticated:
             return True
@@ -29,11 +31,16 @@ class CheckingUserRolesMixin:
 
 class UserAuthenticationCheckMixin(CheckingUserRolesMixin):
     """
-    Класс-миксин для принудительной проверки аутентификации перед отображением страницы
+    Класс-миксин для принудительной проверки аутентификации перед
+    отображением страницы
     """
     def dispatch(self, request, *args, **kwargs):
         if self.is_anonymous():
-            add_message(request, messages.ERROR, 'Вы не авторизованы! Пожалуйста, выполните вход.')
+            add_message(
+                request,
+                messages.ERROR,
+                'Вы не авторизованы! Пожалуйста, выполните вход.',
+            )
             return redirect(reverse('users:login'))
         return super().dispatch(request, *args, **kwargs)
     
@@ -63,19 +70,25 @@ class RoleRequiredMixin(AccessMixin):
 
     def handle_no_permission(self):
         """Обработка отказа в доступе"""
-        messages.error(self.request, self.permission_denied_message)  # Показываем сообщение об ошибке
+        # Показываем сообщение об ошибке
+        messages.error(self.request, self.permission_denied_message)
         next_param = self.request.GET.get('next', '')
 
-        if self.url_redirect:  # Проверяем наличие переменной url_redirect
-            return redirect(reverse(self.url_redirect))  # Стандартное перенаправление
+        # Проверяем наличие переменной url_redirect
+        if self.url_redirect:
+            # Стандартное перенаправление
+            return redirect(reverse(self.url_redirect))
         elif next_param:
-            return redirect(next_param)  # Перенаправляем на сохранённую страницу
+            # Перенаправляем на сохранённую страницу
+            return redirect(next_param)
         raise PermissionDenied(self.get_permission_denied_message())
         
     
-"""Ниже примеры реализации организации доступа по ролям"""
-"""при необходимости добавляем класс  с необходимыми аргументами и их значения"""
-"""далее наследуем созданный класс в представлении котором нужно организовать доступ"""
+# Ниже примеры реализации организации доступа по ролям
+# при необходимости добавляем класс с необходимыми аргументами и их значения
+# далее наследуем созданный класс в представлении, в котором нужно
+# организовать доступ
+
 
 
 class GuestRequiredMixin(RoleRequiredMixin):

@@ -116,7 +116,10 @@ class GroupDetailView(View):
             auto_category = group.auto_rule.category
             channels = TelegramChannel.objects.filter(category=auto_category)
 
-        is_owner = request.user.is_authenticated and (group.owner == request.user)
+        is_owner = (
+            request.user.is_authenticated
+            and (group.owner == request.user)
+        )
         add_form = None
         if is_owner and not hasattr(group, 'auto_rule'):
             free_qs = TelegramChannel.objects.exclude(groups=group)
@@ -132,13 +135,15 @@ class GroupDetailView(View):
 
 
 class AddChannelsView(UserAuthenticationCheckMixin, UserPassesTestMixin, View):
-    
-    # Кажеться это лишнее так как реализована аутентификайия с использованием django-guardian
+
+    # Кажеться это лишнее, так как реализована аутентификайия
+    # с использованием django-guardian
     def test_func(self):
         self.group = get_object_or_404(Group, slug=self.kwargs['slug'])
         return self.group.owner == self.request.user
 
-    # На стороне фронта нет компонента groep_detaile, бронируем название компонента GroupDetail
+    # На стороне фронта нет компонента groep_detaile,
+    # бронируем название компонента GroupDetail
     def post(self, request, slug):
         free_qs = TelegramChannel.objects.exclude(groups=self.group)
         form = AddChannelForm(

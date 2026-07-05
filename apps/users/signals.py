@@ -34,7 +34,7 @@ def assign_role_partner(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=PartnerProfile)
-def assign_role_partner(sender, instance, created, **kwargs):
+def assign_role_channel_moderator(sender, instance, created, **kwargs):
     
     if created:
         return

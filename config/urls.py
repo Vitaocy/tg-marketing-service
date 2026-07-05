@@ -28,5 +28,11 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('parser/', include('apps.parser.urls')),
     path('admin/', admin.site.urls),
-    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'))
+    path(
+        'robots.txt',
+        TemplateView.as_view(
+            template_name='robots.txt',
+            content_type='text/plain',
+        ),
+    ),
 ]

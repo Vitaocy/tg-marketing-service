@@ -9,8 +9,10 @@ def role_required(allowed_roles, login_url=None, message=None):
     """
     Основной декоратор для проверки ролей.
 
-    :param allowed_roles: Список разрешенных ролей (например, ['user', 'partner'])
-    :param login_url: URL для перенаправления неавторизованных (по умолчанию None)
+    :param allowed_roles: Список разрешенных ролей
+        (например, ['user', 'partner'])
+    :param login_url: URL для перенаправления неавторизованных
+        (по умолчанию None)
     :param message: Сообщение об ошибке (по умолчанию None)
     """
 
@@ -26,7 +28,9 @@ def role_required(allowed_roles, login_url=None, message=None):
                 return view_func(request, *args, **kwargs)
 
             # Обработка отказа в доступе
-            return handle_access_denied(request, request.role, allowed_roles, login_url, message)
+            return handle_access_denied(
+                request, request.role, allowed_roles, login_url, message
+            )
 
         return _wrapped_view
 
@@ -39,12 +43,17 @@ def get_user_role(request):
         return 'guest'
     if hasattr(request.user, 'is_partner') and request.user.is_partner:
         return 'partner'
-    if hasattr(request.user, 'is_channel_moderator') and request.user.is_channel_moderator:
+    if (
+        hasattr(request.user, 'is_channel_moderator')
+        and request.user.is_channel_moderator
+    ):
         return 'channel_moderator'
     return 'user'
 
 
-def handle_access_denied(request, current_role, allowed_roles, login_url=None, message=None):
+def handle_access_denied(
+    request, current_role, allowed_roles, login_url=None, message=None
+):
     """
     Обработка отказа в доступе с учетом разных сценариев
     """
@@ -55,7 +64,9 @@ def handle_access_denied(request, current_role, allowed_roles, login_url=None, m
         'channel_moderator': "Доступ только для модераторов каналов"
     }
 
-    error_message = message or default_messages.get(current_role, "Доступ запрещен")
+    error_message = message or default_messages.get(
+        current_role, "Доступ запрещен"
+    )
 
     # Для неавторизованных - редирект на страницу входа
     if current_role == 'guest' and login_url:
@@ -115,7 +126,9 @@ def partner_required(view_func=None, login_url=None, message=None):
 
             # Затем проверяем партнерский статус
             if not getattr(request.user, 'is_partner', False):
-                messages.error(request, message or "Доступ только для партнеров")
+                messages.error(
+                    request, message or "Доступ только для партнеров"
+                )
                 return HttpResponseForbidden("Доступ только для партнеров")
 
             return view_func(request, *args, **kwargs)
@@ -143,8 +156,13 @@ def channel_moderator_required(view_func=None, login_url=None, message=None):
 
             # Затем проверяем статус модератора канала
             if not getattr(request.user, 'is_channel_moderator', False):
-                messages.error(request, message or "Доступ только для модераторов каналов")
-                return HttpResponseForbidden("Доступ только для модераторов каналов")
+                messages.error(
+                    request,
+                    message or "Доступ только для модераторов каналов",
+                )
+                return HttpResponseForbidden(
+                    "Доступ только для модераторов каналов"
+                )
 
             return view_func(request, *args, **kwargs)
 

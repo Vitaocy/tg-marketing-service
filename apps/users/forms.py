@@ -170,8 +170,10 @@ class AvatarChange(UserChangeForm):
 class RestorePasswordRequestForm(PasswordResetForm):
     email = forms.EmailField(
         label='Email',
-        widget=forms.EmailInput(attrs={'class': 'form-control',
-                                       'placeholder': 'Пожалуйста, введите ваш email'})
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Пожалуйста, введите ваш email',
+        })
     )
 
 
@@ -183,6 +185,8 @@ class RestorePasswordForm(SetPasswordForm):
     )
     new_password2 = forms.CharField(
         label='Подтверждение пароля',
-        widget=forms.PasswordInput(attrs={'class': 'form-control',
-                                          'placeholder': 'Подтверждение пароля'})
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Подтверждение пароля',
+        })
     )

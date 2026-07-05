@@ -6,7 +6,13 @@ from apps.homepage.models import HomePageComponent
 
 @admin.register(HomePageComponent)
 class HomePageComponentAdmin(GuardedModelAdminMixin, admin.ModelAdmin):
-    list_display = ['title', 'component_type', 'is_active', 'order', 'created_at']
+    list_display = [
+        'title',
+        'component_type',
+        'is_active',
+        'order',
+        'created_at',
+    ]
     list_filter = ['component_type', 'is_active']
     list_editable = ['is_active', 'order']
     search_fields = ['title']

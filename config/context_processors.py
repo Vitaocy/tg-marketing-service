@@ -16,7 +16,8 @@ def user_role(request):
         if not request.user.is_authenticated:
             role = 'guest'
         else:
-            role = 'partner' if getattr(request.user, 'is_partner', False) else 'user'
+            is_partner = getattr(request.user, 'is_partner', False)
+            role = 'partner' if is_partner else 'user'
         request.role = role  # Кэшируем роль в запросе
 
     context = {

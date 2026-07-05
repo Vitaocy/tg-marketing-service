@@ -138,7 +138,11 @@ class UserCabinetView(UserAuthenticationCheckMixin, View):
         total_hours = (last_visit - registration_date).total_seconds() / 3600
         usage_stats = {
             'registration_date': user.date_joined.strftime('%d.%m.%Y'),
-            'last_visit': user.last_login.strftime('%d.%m.%Y') if user.last_login else 'Никогда',
+            'last_visit': (
+                user.last_login.strftime('%d.%m.%Y')
+                if user.last_login
+                else 'Никогда'
+            ),
             'total_time': f'{total_hours:.0f} часов',
         }
 

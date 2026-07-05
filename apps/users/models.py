@@ -121,15 +121,17 @@ class PartnerProfile(models.Model):
         # Проверяем, существует ли уже партнерский код
         if not self.partner_code:
             """
-            Если партнерский код отсутствует, начинаем генерацию уникального кода.
-            Используем бесконечный цикл для гарантии уникальности.
+            Если партнерский код отсутствует, начинаем генерацию
+            уникального кода. Используем бесконечный цикл для гарантии
+            уникальности.
             """
             while True:
                 # Генерируем случайную строку длиной 6 символов
                 random_part = get_random_string(length=6)
                 """
-                get_random_string генерирует криптографически безопасную случайную строку,
-                которая делает код более уникальным.
+                get_random_string генерирует криптографически
+                безопасную случайную строку, которая делает код более
+                уникальным.
                 """
             
                 # Создаем уникальный идентификатор на основе UUID
@@ -141,7 +143,9 @@ class PartnerProfile(models.Model):
                 """
             
                 # Формируем финальный партнерский код
-                self.partner_code = f"partner-{self.user_id}-{unique_id}-{random_part}"
+                self.partner_code = (
+                    f"partner-{self.user_id}-{unique_id}-{random_part}"
+                )
                 """
                 Структура кода:
                 - Префикс "partner-" для идентификации
@@ -151,7 +155,9 @@ class PartnerProfile(models.Model):
                 """
             
                 # Проверяем уникальность сгенерированного кода
-                if not PartnerProfile.objects.filter(partner_code=self.partner_code).exists():
+                if not PartnerProfile.objects.filter(
+                    partner_code=self.partner_code
+                ).exists():
                     """
                     Проверяем, существует ли такой код в базе данных.
                     Если код уникален, выходим из цикла.

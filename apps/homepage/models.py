@@ -14,14 +14,20 @@ class HomePageComponent(models.Model):
     ]
 
     title = models.CharField(max_length=200, verbose_name='Заголовок')
-    content = models.JSONField(verbose_name='Содержимое', help_text='JSON с данными компонента')
+    content = models.JSONField(
+        verbose_name='Содержимое',
+        help_text='JSON с данными компонента',
+    )
     component_type = models.CharField(
         max_length=50,
         choices=COMPONENT_TYPES,
         verbose_name='Тип компонента'
     )
     is_active = models.BooleanField(default=True, verbose_name='Активен')
-    order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Порядок отображения',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

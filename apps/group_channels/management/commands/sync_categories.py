@@ -26,7 +26,8 @@ class Command(BaseCommand):
         "Создаёт автоподборки (Group + AutoGroupRule) для категорий.\n"
         "По умолчанию берёт полный список категорий из формы (choices),\n"
         "чтобы категории существовали даже без каналов.\n"
-        "При желании можно взять только реально встречающиеся категории из БД (--source=db)."
+        "При желании можно взять только реально встречающиеся "
+        "категории из БД (--source=db)."
     )
 
     def add_arguments(self, parser):
@@ -53,16 +54,25 @@ class Command(BaseCommand):
         elif owner_username:
             user = User.objects.filter(username=owner_username).first()
             if not user:
-                raise CommandError(f"Пользователь username='{owner_username}' не найден.")
+                raise CommandError(
+                    f"Пользователь username='{owner_username}' не найден."
+                )
         elif owner_email:
             user = User.objects.filter(email=owner_email).first()
             if not user:
-                raise CommandError(f"Пользователь email='{owner_email}' не найден.")
+                raise CommandError(
+                    f"Пользователь email='{owner_email}' не найден."
+                )
         else:
-            user = User.objects.filter(is_superuser=True).first() or User.objects.first()
+            user = (
+                User.objects.filter(is_superuser=True).first()
+                or User.objects.first()
+            )
 
         if not user:
-            raise CommandError("Не удалось определить владельца (нет пользователей).")
+            raise CommandError(
+                "Не удалось определить владельца (нет пользователей)."
+            )
         return user
 
     def _load_categories_from_choices(self):
@@ -99,7 +109,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         owner = self._resolve_owner(
-            options["owner_id"], options["owner_username"], options["owner_email"]
+            options["owner_id"],
+            options["owner_username"],
+            options["owner_email"],
         )
         start_order = options["start_order"]
         order_step = options["order_step"]
@@ -145,11 +157,17 @@ class Command(BaseCommand):
                     updated_rules += 1
 
             if dry_run:
-                raise transaction.TransactionManagementError("DRY RUN: изменения не сохранены.")
+                raise transaction.TransactionManagementError(
+                    "DRY RUN: изменения не сохранены."
+                )
 
-        self.stdout.write(self.style.SUCCESS("Синхронизация категорий завершена."))
         self.stdout.write(
-            f"Всего категорий: {len(categories)} | создано групп: {created_groups} | "
-            f"создано правил: {created_rules} | обновлено правил: {updated_rules}"
+            self.style.SUCCESS("Синхронизация категорий завершена.")
+        )
+        self.stdout.write(
+            f"Всего категорий: {len(categories)} | "
+            f"создано групп: {created_groups} | "
+            f"создано правил: {created_rules} | "
+            f"обновлено правил: {updated_rules}"
         )
         self.stdout.write(self.style.SUCCESS(f"Владелец групп: {owner}"))

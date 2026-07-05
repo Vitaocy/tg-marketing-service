@@ -5,21 +5,54 @@ from apps.users.models import User
 
 class TelegramChannel(models.Model):
     channel_id = models.BigIntegerField(unique=True, verbose_name='ID канала')
-    # invite_link = models.URLField(max_length=255, blank=True, null=True, verbose_name='Инвайт ссылка')
-    username = models.CharField(max_length=255, blank=True, null=True, verbose_name='Username')
-    title = models.CharField(max_length=255, verbose_name='Название канала')
-    description = models.TextField(blank=True, null=True, verbose_name='Описание канала')
-    # linked_chat_id = models.BigIntegerField(blank=True, null=True, verbose_name='ID чата канала')
-    participants_count = models.IntegerField(default=0, verbose_name='Количество подписчиков')
-    # photo_url = models.URLField(max_length=512, blank=True, null=True, verbose_name='Ссылка на фото')
-    parsed_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата парсинга')
-    pinned_messages = models.JSONField(blank=True, null=True, default=list, verbose_name='Закрепленное сообщение')
-    creation_date = models.DateTimeField(null=True, blank=True, verbose_name='Дата создания')
-    last_messages = models.JSONField(blank=True, null=True, default=list, verbose_name='Последние сообщения')
-    average_views = models.IntegerField(default=0, verbose_name='Среднее количество просмотров')
-    category = models.CharField(blank=True, null=True, db_index=True, verbose_name='Категория канала')
-    country = models.CharField(blank=True, null=True, verbose_name='Страна канала')
-    language = models.CharField(blank=True, null=True, verbose_name='Язык канала')
+    # invite_link = models.URLField(
+    #     max_length=255, blank=True, null=True, verbose_name='Инвайт ссылка',
+    # )
+    username = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name='Username',
+    )
+    title = models.CharField(
+        max_length=255, verbose_name='Название канала',
+    )
+    description = models.TextField(
+        blank=True, null=True, verbose_name='Описание канала',
+    )
+    # linked_chat_id = models.BigIntegerField(
+    #     blank=True, null=True, verbose_name='ID чата канала',
+    # )
+    participants_count = models.IntegerField(
+        default=0, verbose_name='Количество подписчиков',
+    )
+    # photo_url = models.URLField(
+    #     max_length=512, blank=True, null=True, verbose_name='Ссылка на фото',
+    # )
+    parsed_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='Дата парсинга',
+    )
+    pinned_messages = models.JSONField(
+        blank=True, null=True, default=list,
+        verbose_name='Закрепленное сообщение',
+    )
+    creation_date = models.DateTimeField(
+        null=True, blank=True, verbose_name='Дата создания',
+    )
+    last_messages = models.JSONField(
+        blank=True, null=True, default=list,
+        verbose_name='Последние сообщения',
+    )
+    average_views = models.IntegerField(
+        default=0, verbose_name='Среднее количество просмотров',
+    )
+    category = models.CharField(
+        blank=True, null=True, db_index=True,
+        verbose_name='Категория канала',
+    )
+    country = models.CharField(
+        blank=True, null=True, verbose_name='Страна канала',
+    )
+    language = models.CharField(
+        blank=True, null=True, verbose_name='Язык канала',
+    )
 
     class Meta:
         verbose_name = 'Telegram канал'
@@ -84,7 +117,9 @@ class ChannelModerator(models.Model):
         default=False,
         verbose_name='Может управлять модераторами'
     )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата назначения')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='Дата назначения',
+    )
 
     class Meta:
         verbose_name = 'Модератор канала'
@@ -98,9 +133,15 @@ class ChannelModerator(models.Model):
 
 
 class ChannelStats(models.Model):
-    channel = models.ForeignKey(TelegramChannel, on_delete=models.CASCADE, verbose_name="Канал")
-    participants_count = models.IntegerField(verbose_name="Количество участников")
-    daily_growth = models.IntegerField(default=0, verbose_name="Прирост за день")
+    channel = models.ForeignKey(
+        TelegramChannel, on_delete=models.CASCADE, verbose_name="Канал",
+    )
+    participants_count = models.IntegerField(
+        verbose_name="Количество участников",
+    )
+    daily_growth = models.IntegerField(
+        default=0, verbose_name="Прирост за день",
+    )
     parsed_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

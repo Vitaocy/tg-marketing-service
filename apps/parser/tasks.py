@@ -41,11 +41,14 @@ def parse_channel(channel_id):
                 # make connection with Telegram
                 await client.connect()
                 data = await tg_parser(channel_obj.username, client)
-                # using sync_to_async to avoid Django ORM errors (cause ORM is sync)
+                # using sync_to_async to avoid Django ORM errors
+                # (cause ORM is sync)
                 await sync_to_async(save_channel_data)(channel_obj, data)
                 await sync_to_async(save_channel_stats)(channel_obj, data)
             except (DatabaseError, IntegrityError) as e:
-                log.error(f'Database safe error for {channel_obj.username} - {e}')
+                log.error(
+                    f'Database safe error for {channel_obj.username} - {e}'
+                )
             except Exception as e:
                 log.error(f'Unexpected error: - {e}', exc_info=True)
 
@@ -89,7 +92,8 @@ def save_channel_stats(channel, data):
         parsed_at=current_date,
     )
     log.info(
-        f"Stats for channel {channel.title} saved: participants={current_count}, growth={daily_growth}"
+        f"Stats for channel {channel.title} saved: "
+        f"participants={current_count}, growth={daily_growth}"
     )
 
 
@@ -107,6 +111,7 @@ def parse_all_channels():
         # add pause between parsing, 15s + random value
         pause = 15 + random.uniform(0, 5)
         log.info(
-            f"Started task for channel {channel.channel_id}, next one in {pause:.2f} s"
+            f"Started task for channel {channel.channel_id}, "
+            f"next one in {pause:.2f} s"
         )
         time.sleep(pause)

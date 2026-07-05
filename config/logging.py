@@ -23,7 +23,10 @@ LOGGING = {
             "style": "{",
         },
         "verbose": {
-            "format": "{levelname} {asctime} {module} {funcName} (line:{lineno}) - {message}",
+            "format": (
+                "{levelname} {asctime} {module} {funcName} "
+                "(line:{lineno}) - {message}"
+            ),
             "style": "{",
         },
     },
