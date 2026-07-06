@@ -80,7 +80,7 @@
 make install   # uv sync
 ```
 
-Скопируйте [`env.example`](env.example) в `.env` и заполните значения.
+Скопируйте [`.env.example`](.env.example) в `.env` и заполните значения.
 
 ### 1. Telegram
 
