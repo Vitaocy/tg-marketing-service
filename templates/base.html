@@ -8,12 +8,10 @@
     <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Hexlet Telegram Stats</title>
     {% vite_hmr_client %}
-    {% vite_asset 'src/main.tsx' %}
     {% vite_react_refresh %}
+    {% vite_asset 'src/main.tsx' %}
 </head>
 <body>
-    <div id="root">
-        {% block inertia %}{% endblock %}
-    </div>
+    {% block inertia %}{% endblock %}
 </body>
 </html>
