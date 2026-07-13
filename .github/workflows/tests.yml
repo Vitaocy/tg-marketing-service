@@ -12,7 +12,6 @@ jobs:
 
     env:
       DJANGO_SETTINGS_MODULE: config.settings
-      DATABASE_URL: ${{ secrets.DB_URL }}
       SECRET_KEY: ci-secret-key
     
     steps:
@@ -44,10 +43,14 @@ jobs:
           uv pip install --system pytest pytest-cov
 
       - name: Generate fixtures
+        env:
+          DATABASE_URL: ${{ secrets.DB_URL }}
         run: |
           uv run python3 -c "from tests.generate_fixtures import ModelAndFormFixtureGenerator; ModelAndFormFixtureGenerator().generate_all()"
 
       - name: Run tests
+        env:
+          DATABASE_URL: ${{ secrets.DB_URL }}
         run: |
           uv run pytest --cov=config --cov-report=xml
 
