@@ -27,8 +27,7 @@ def parse_channel(channel_id: int) -> None:
         log.error(f"Channel with ID {channel_id} does not exist in database")
         return
     except DatabaseError as e:
-        log.error(f'Database error while fetching channel -;'
-                  f'{channel_id} - {e}')
+        log.error(f"Database error while fetching channel -;{channel_id} - {e}")
         return
 
     async def run_parser(channel_obj: TelegramChannel) -> None:
@@ -47,14 +46,16 @@ def parse_channel(channel_id: int) -> None:
                 data = await tg_parser(channel_obj.username, client)
                 # using sync_to_async to avoid Django ORM errors
                 # (cause ORM is sync)
+                # using sync_to_async to avoid Django ORM errors
+                # (cause ORM is sync)
                 await sync_to_async(save_channel_data)(channel_obj, data)
                 await sync_to_async(save_channel_stats)(channel_obj, data)
             except (DatabaseError, IntegrityError) as e:
                 log.error(
-                    f'Database safe error for {channel_obj.username} - {e}'
+                    f"Database safe error for {channel_obj.username} - {e}"
                 )
             except Exception as e:
-                log.error(f'Unexpected error: - {e}', exc_info=True)
+                log.error(f"Unexpected error: - {e}", exc_info=True)
 
     try:
         asyncio.run(run_parser(channel))
@@ -78,7 +79,9 @@ def save_channel_data(channel: TelegramChannel, data: dict[str, Any]) -> None:
 def save_channel_stats(channel: TelegramChannel, data: dict[str, Any]) -> None:
     """Save channel stats"""
     last_stats = (
-        ChannelStats.objects.filter(channel=channel).order_by("-parsed_at").first()
+        ChannelStats.objects.filter(channel=channel)
+        .order_by("-parsed_at")
+        .first()
     )
     current_date = timezone.now()
     current_count = data.get("participants_count", 0)
@@ -98,6 +101,8 @@ def save_channel_stats(channel: TelegramChannel, data: dict[str, Any]) -> None:
     log.info(
         f"Stats for channel {channel.title} saved: "
         f"participants={current_count}, growth={daily_growth}"
+        f"Stats for channel {channel.title} saved: "
+        f"participants={current_count}, growth={daily_growth}"
     )
 
 
@@ -115,6 +120,8 @@ def parse_all_channels() -> None:
         # add pause between parsing, 15s + random value
         pause = 15 + random.uniform(0, 5)
         log.info(
+            f"Started task for channel {channel.channel_id}, "
+            f"next one in {pause:.2f} s"
             f"Started task for channel {channel.channel_id}, "
             f"next one in {pause:.2f} s"
         )
