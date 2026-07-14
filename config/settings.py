@@ -171,9 +171,10 @@ if os.getenv("PROD") == "t":
         }
     }
 else:
+    database_url = os.getenv("DATABASE_URL", "") or "sqlite:///db.sqlite3"
     DATABASES = {
-        "default": dj_database_url.config(
-            default=os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"),
+        "default": dj_database_url.parse(
+            url=database_url,
             conn_max_age=600,
         )
     }
