@@ -176,6 +176,28 @@ class ParserDetailView(DetailView):
 
 
 class ChannelLookupView(View):
+    '''
+    API endpoint для поиска каналов
+
+    GET /parser/lookup/?q=<query>
+
+    Параметры:
+    - q (str): поисковая строка по title или username
+
+    Возвращает JSON:
+    [
+        {
+            "id": 123456789,
+            "title": "Channel Name",
+            "username": "channelname",
+            "participants_count": 5000,
+            "category": "news"
+        }
+    ]
+
+    - Пустой q / Нет совпадений - возвращает []
+    - Максимум 10 результатов
+    '''
 
     def get(self, request, *args, **kwargs):
         q = request.GET.get('q')
