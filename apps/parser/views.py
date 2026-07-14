@@ -205,8 +205,17 @@ class ChannelLookupView(View):
         if not q:
             return JsonResponse([], safe=False)
 
-        channels = TelegramChannel.objects.filter(Q(title__icontains=q) | Q(username__icontains=q))[:10]
-        result = list(channels.values('id', 'title', 'username', 'participants_count', 'category'))
+        channels = TelegramChannel.objects.filter(
+            Q(title__icontains=q) | Q(username__icontains=q)
+        ).order_by('-participants_count')[:10]
+
+        result = list(channels.values(
+            'id',
+            'title',
+            'username',
+            'participants_count',
+            'category'
+        ))
         return JsonResponse(result, safe=False)
 
 
