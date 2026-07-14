@@ -204,7 +204,9 @@ class ChannelLookupView(View):
     - Максимум 10 результатов
     """
 
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
+    def get(
+        self, request: HttpRequest, *args: Any, **kwargs: Any
+    ) -> JsonResponse:
         q = request.GET.get("q")
 
         if not q:
