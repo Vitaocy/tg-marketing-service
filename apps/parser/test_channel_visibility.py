@@ -1,4 +1,3 @@
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -69,9 +68,7 @@ class ChannelVisibilityTest(TestCase):
         from apps.parser.views import ParserListView
 
         visible_ids = set(
-            ParserListView()
-            .get_queryset()
-            .values_list("channel_id", flat=True)
+            ParserListView().get_queryset().values_list("channel_id", flat=True)
         )
 
         self.assertEqual(
@@ -90,9 +87,7 @@ class ChannelVisibilityTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        visible_usernames = {
-            channel["username"] for channel in response.json()
-        }
+        visible_usernames = {channel["username"] for channel in response.json()}
 
         self.assertEqual(
             visible_usernames,
@@ -111,9 +106,7 @@ class ChannelVisibilityTest(TestCase):
         from apps.parser.views import ParserListView
 
         visible_ids = set(
-            ParserListView()
-            .get_queryset()
-            .values_list("channel_id", flat=True)
+            ParserListView().get_queryset().values_list("channel_id", flat=True)
         )
 
         self.assertNotIn(channel.channel_id, visible_ids)

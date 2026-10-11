@@ -13,7 +13,7 @@ class AdminOnlyView(AdminRequiredMixin, View):
     def get(
         self, request: HttpRequest, *args: Any, **kwargs: Any
     ) -> HttpResponse:
-        return HttpResponse("ok") 
+        return HttpResponse("ok")
 
 
 urlpatterns = [
