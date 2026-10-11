@@ -13,6 +13,7 @@ from django.views.generic import DetailView, FormView, ListView, View
 from telethon import TelegramClient
 from telethon.sessions import StringSession
 
+from apps.admin.moderation.models import ModerationRequest
 from apps.parser.dto.channel_dto import ChannelDTO, ChannelListDTO
 from apps.parser.dto.post_analysis_dto import PostDataDTO, PostPagePropsDTO
 from apps.parser.forms import ChannelParseForm
@@ -24,8 +25,10 @@ from apps.parser.types import (
     ParsedChannelResult,
     normalize_channel_data,
 )
-from apps.parser.utils import get_telegram_credentials, normalize_channel_username
-from apps.admin.moderation.models import ModerationRequest
+from apps.parser.utils import (
+    get_telegram_credentials,
+    normalize_channel_username,
+)
 from config.mixins import UserAuthenticationCheckMixin
 from config.renderers import render_inertia_from_dto
 
@@ -261,7 +264,6 @@ class ChannelLookupView(View):
 
         if not q:
             return JsonResponse([], safe=False)
-
 
         channels = TelegramChannel.objects.filter(is_public=True).filter(
             Q(title__icontains=q) | Q(username__icontains=q)

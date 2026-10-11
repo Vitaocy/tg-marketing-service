@@ -1,7 +1,5 @@
-from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
 from django.test import TestCase
 from django.urls import reverse
 
@@ -100,7 +98,6 @@ class ChannelVisibilityTest(TestCase):
             visible_usernames,
             {"unmoderated_channel", "approved_channel"},
         )
-
 
     def test_new_channel_without_moderation_request_is_hidden(self):
         channel = self.create_channel(
