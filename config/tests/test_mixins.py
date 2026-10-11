@@ -54,3 +54,31 @@ class AdminRequiredMixinTests(TestCase):
                 response = self.client.get(self.url)
 
                 self.assertEqual(response.status_code, 403)
+
+    def test_staff_without_admin_role_is_denied(self) -> None:
+        user = User.objects.create_user(
+            username="staff-only",
+            email="staff-only@example.com",
+            password="password",
+            role="user",
+            is_staff=True,
+        )
+        self.client.force_login(user)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_superuser_without_admin_role_is_denied(self) -> None:
+        user = User.objects.create_user(
+            username="superuser-only",
+            email="superuser-only@example.com",
+            password="password",
+            role="user",
+            is_superuser=True,
+        )
+        self.client.force_login(user)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 403)
