@@ -79,6 +79,9 @@ role = request.role
 | `user` | User |
 | `partner` | Partner |
 | `channel_moderator` | Channel Moderator |
+| `admin` | Admin |
+
+Роль `admin` создаётся сид-миграцией [`apps/users/migrations/0011_seed_admin_role.py`](apps/users/migrations/0011_seed_admin_role.py).
 
 ## Ограничение доступа во вью
 
@@ -86,9 +89,12 @@ role = request.role
 
 - `UserAuthenticationCheckMixin` — требует авторизации;
 - `GuestRequiredMixin` — только для неавторизованных (гостей);
-- `UserRequiredMixin` — для любых авторизованных (`user`, `partner`, `channel_moderator`);
+- `UserRequiredMixin` — для любых авторизованных (`user`, `partner`, `channel_moderator`, `admin`);
 - `PartnerRequiredMixin` — только для активных партнёров;
-- `ChannelModeratorRequiredMixin` — только для модераторов каналов.
+- `ChannelModeratorRequiredMixin` — только для модераторов каналов;
+- `AdminRequiredMixin` — только для администраторов (`admin`). Закрывает админские маршруты (например, `/admin/moderation/`).
+
+При отказе в доступе миксин показывает сообщение и возвращает **HTTP 403** — либо редирект, если задан `url_redirect` или в запросе есть `?next=`.
 
 Базовый класс `RoleRequiredMixin` позволяет описать собственную роль — переопределите `allowed_roles` (и при необходимости метод `_test_role`).
 
