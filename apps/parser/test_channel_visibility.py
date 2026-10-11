@@ -7,7 +7,7 @@ from apps.parser.models import TelegramChannel
 
 
 class ChannelVisibilityTest(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.user = get_user_model().objects.create_user(
             username="visibility_test_user",
             email="visibility_test_user@example.com",
@@ -46,17 +46,21 @@ class ChannelVisibilityTest(TestCase):
         self.create_moderation_request(self.rejected_channel, "rejected")
         self.create_moderation_request(self.approved_channel, "approved")
 
-    def create_channel(self, channel_id, title, username):
+    def create_channel(
+        self, channel_id: int, title: str, username: str
+    ) -> TelegramChannel:
         return TelegramChannel.objects.create(
             channel_id=channel_id,
             title=title,
             username=username,
         )
 
-    def create_moderation_request(self, channel, status):
+    def create_moderation_request(
+        self, channel: TelegramChannel, status: str
+    ) -> ModerationRequest:
         return ModerationRequest.objects.create(
             submitted_by=self.user,
-            channel_identifier=channel.username,
+            channel_identifier=channel.username or "",
             channel_by=channel,
             category="test",
             country="test",
